@@ -1,0 +1,94 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+#define MAX_STACKS 3
+#define MAX_SIZE 100
+
+typedef struct {
+    int* arr;
+    int top;
+    int capacity;
+} Stack;
+
+void initialize(Stack* stack, int capacity) {
+    stack->arr = (int*)malloc(sizeof(int) * capacity);
+    stack->top = -1;
+    stack->capacity = capacity;
+}
+
+void push(Stack* stack, int value) {
+    if (stack->top < stack->capacity - 1) {
+        stack->arr[++stack->top] = value;
+    } else {
+        printf("Stack overflow!\n");
+    }
+}
+
+int pop(Stack* stack) {
+    if (stack->top >= 0) {
+        return stack->arr[stack->top--];
+    } else {
+        printf("Stack underflow!\n");
+        return -1;
+    }
+}
+
+int isEmpty(Stack* stack) {
+    return stack->top == -1;
+}
+
+int main() {
+    Stack stacks[MAX_STACKS];
+    int stackCapacities[MAX_STACKS] = {MAX_SIZE / 3, MAX_SIZE / 3, MAX_SIZE / 3};
+
+    for (int i = 0; i < MAX_STACKS; i++) {
+        initialize(&stacks[i], stackCapacities[i]);
+    }
+
+    int choice, stackNum, value;
+
+    do {
+        printf("\n1. Push\n");
+        printf("2. Pop\n");
+        printf("3. Quit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter stack number (0, 1, or 2): ");
+                scanf("%d", &stackNum);
+                if (stackNum >= 0 && stackNum < MAX_STACKS) {
+                    printf("Enter value to push: ");
+                    scanf("%d", &value);
+                    push(&stacks[stackNum], value);
+                } else {
+                    printf("Invalid stack number!\n");
+                }
+                break;
+            case 2:
+                printf("Enter stack number (0, 1, or 2): ");
+                scanf("%d", &stackNum);
+                if (stackNum >= 0 && stackNum < MAX_STACKS) {
+                    int poppedValue = pop(&stacks[stackNum]);
+                    if (poppedValue != -1) {
+                        printf("Popped value: %d\n", poppedValue);
+                    }
+                } else {
+                    printf("Invalid stack number!\n");
+                }
+                break;
+            case 3:
+                break;
+            default:
+                printf("Invalid choice!\n");
+        }
+    } while (choice != 3);
+
+    // Free memory
+    for (int i = 0; i < MAX_STACKS; i++) {
+        free(stacks[i].arr);
+    }
+
+    return 0;
+}

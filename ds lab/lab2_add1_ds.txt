@@ -1,0 +1,92 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_STUDENTS 100
+#define MAX_NAME_LENGTH 50
+#define MAX_BRANCH_LENGTH 50
+
+// Structure to hold student records
+typedef struct {
+    char name[MAX_NAME_LENGTH];
+    int rollNo;
+    char grade;
+    char branch[MAX_BRANCH_LENGTH];
+} Student;
+
+// Function to write student records to a file
+void writeRecordsToFile(Student students[], int numStudents, const char* filename) {
+    FILE* file = fopen(filename, "w");
+    if (file == NULL) {
+        printf("Error opening file for writing!\n");
+        return;
+    }
+
+    for (int i = 0; i < numStudents; i++) {
+        fprintf(file, "%s %d %c %s\n", students[i].name, students[i].rollNo, students[i].grade, students[i].branch);
+    }
+
+    fclose(file);
+}
+
+// Function to read student records from a file
+void readRecordsFromFile(Student students[], int* numStudents, const char* filename) {
+    FILE* file = fopen(filename, "r");
+    if (file == NULL) {
+        printf("Error opening file for reading!\n");
+        return;
+    }
+
+    *numStudents = 0;
+    while (fscanf(file, "%s %d %c %s", students[*numStudents].name, &students[*numStudents].rollNo, &students[*numStudents].grade, students[*numStudents].branch) == 4) {
+        (*numStudents)++;
+    }
+
+    fclose(file);
+}
+
+// Function to store student records branch-wise in separate files
+void storeBranchWise(Student students[], int numStudents) {
+    for (int i = 0; i < numStudents; i++) {
+        char filename[MAX_BRANCH_LENGTH + 4]; // +4 for ".txt"
+        sprintf(filename, "%s.txt", students[i].branch);
+
+        FILE* file = fopen(filename, "a"); // Open in append mode
+        if (file == NULL) {
+            printf("Error opening file for writing!\n");
+            return;
+        }
+
+        fprintf(file, "%s %d %c %s\n", students[i].name, students[i].rollNo, students[i].grade, students[i].branch);
+
+        fclose(file);
+    }
+}
+
+int main() {
+    Student students[MAX_STUDENTS];
+    int numStudents;
+
+    // Example student records
+    strcpy(students[0].name, "John Doe");
+    students[0].rollNo = 101;
+    students[0].grade = 'A';
+    strcpy(students[0].branch, "CSE");
+
+    strcpy(students[1].name, "Jane Doe");
+    students[1].rollNo = 102;
+    students[1].grade = 'B';
+    strcpy(students[1].branch, "ECE");
+
+    numStudents = 2;
+
+    // Write student records to a file
+    writeRecordsToFile(students, numStudents, "students.txt");
+
+    // Read student records from the file
+    readRecordsFromFile(students, &numStudents, "students.txt");
+
+    // Store student records branch-wise in separate files
+    storeBranchWise(students, numStudents);
+
+    return 0;
+}

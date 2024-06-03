@@ -1,0 +1,56 @@
+#include <stdio.h>
+
+#define MAX_ROWS 100
+#define MAX_COLS 100
+
+void readMatrix(int rows, int cols, int matrix[MAX_ROWS][MAX_COLS]) {
+    printf("Enter the elements of the matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+}
+
+void displayMatrix(int rows, int cols, int matrix[MAX_ROWS][MAX_COLS]) {
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void maxMatrix(int rows, int cols, int A[MAX_ROWS][MAX_COLS], int B[MAX_ROWS][MAX_COLS], int C[MAX_ROWS][MAX_COLS]) {
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            C[i][j] = (A[i][j] > B[i][j]) ? A[i][j] : B[i][j];
+        }
+    }
+}
+
+int main() {
+    int rows, cols;
+    printf("Enter the number of rows and columns for the matrices: ");
+    scanf("%d %d", &rows, &cols);
+
+    int A[MAX_ROWS][MAX_COLS];
+    int B[MAX_ROWS][MAX_COLS];
+    int C[MAX_ROWS][MAX_COLS];
+
+    // Read matrices A and B
+    printf("For Matrix A:\n");
+    readMatrix(rows, cols, A);
+
+    printf("For Matrix B:\n");
+    readMatrix(rows, cols, B);
+
+    // Calculate max matrix C
+    maxMatrix(rows, cols, A, B, C);
+
+    // Display matrix C
+    printf("Matrix C (max of A and B):\n");
+    displayMatrix(rows, cols, C);
+
+    return 0;
+}

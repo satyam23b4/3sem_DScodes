@@ -1,0 +1,145 @@
+#include <stdio.h>
+
+#define MAX_SIZE 10
+
+// Function to read a matrix
+void readMatrix(int rows, int cols, int matrix[MAX_SIZE][MAX_SIZE]) {
+    printf("Enter the elements of the matrix:\n");
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            scanf("%d", &matrix[i][j]);
+        }
+    }
+}
+
+// Function to display a matrix
+void displayMatrix(int rows, int cols, int matrix[MAX_SIZE][MAX_SIZE]) {
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+// Function to multiply two matrices
+void multiplyMatrices(int rows1, int cols1, int A[MAX_SIZE][MAX_SIZE], int rows2, int cols2, int B[MAX_SIZE][MAX_SIZE], int result[MAX_SIZE][MAX_SIZE]) {
+    if(cols1 != rows2) {
+        printf("Matrix multiplication not possible!\n");
+        return;
+    }
+
+    for(int i = 0; i < rows1; i++) {
+        for(int j = 0; j < cols2; j++) {
+            result[i][j] = 0;
+            for(int k = 0; k < cols1; k++) {
+                result[i][j] += A[i][k] * B[k][j];
+            }
+        }
+    }
+}
+
+// Function to add two matrices
+void addMatrices(int rows, int cols, int A[MAX_SIZE][MAX_SIZE], int B[MAX_SIZE][MAX_SIZE], int result[MAX_SIZE][MAX_SIZE]) {
+    for(int i = 0; i < rows; i++) {
+        for(int j = 0; j < cols; j++) {
+            result[i][j] = A[i][j] + B[i][j];
+        }
+    }
+}
+
+// Function to check if a square matrix is a magic square
+int isMagicSquare(int n, int matrix[MAX_SIZE][MAX_SIZE]) {
+    int sum = 0;
+
+    // Calculate the sum of the first row (assumed as the magic constant)
+    for(int j = 0; j < n; j++) {
+        sum += matrix[0][j];
+    }
+
+    // Check the sum of rows
+    for(int i = 1; i < n; i++) {
+        int rowSum = 0;
+        for(int j = 0; j < n; j++) {
+            rowSum += matrix[i][j];
+        }
+        if(rowSum != sum)
+            return 0;
+    }
+
+    // Check the sum of columns
+    for(int j = 0; j < n; j++) {
+        int colSum = 0;
+        for(int i = 0; i < n; i++) {
+            colSum += matrix[i][j];
+        }
+        if(colSum != sum)
+            return 0;
+    }
+
+    // Check the sum of diagonals
+    int diag1Sum = 0;
+    int diag2Sum = 0;
+    for(int i = 0; i < n; i++) {
+        diag1Sum += matrix[i][i];
+        diag2Sum += matrix[i][n-i-1];
+    }
+    if(diag1Sum != sum || diag2Sum != sum)
+        return 0;
+
+    return 1;
+}
+
+int main() {
+    int rows1, cols1, rows2, cols2;
+
+    printf("Enter the number of rows and columns for Matrix A: ");
+    scanf("%d %d", &rows1, &cols1);
+
+    printf("Enter the number of rows and columns for Matrix B: ");
+    scanf("%d %d", &rows2, &cols2);
+
+    if(cols1 != rows2) {
+        printf("Matrix multiplication not possible!\n");
+        return 1;
+    }
+
+    int A[MAX_SIZE][MAX_SIZE], B[MAX_SIZE][MAX_SIZE], result[MAX_SIZE][MAX_SIZE];
+
+    // Read matrices A and B
+    printf("For Matrix A:\n");
+    readMatrix(rows1, cols1, A);
+
+    printf("For Matrix B:\n");
+    readMatrix(rows2, cols2, B);
+
+    // Multiply matrices A and B
+    multiplyMatrices(rows1, cols1, A, rows2, cols2, B, result);
+
+    // Display the result of matrix multiplication
+    printf("Result of Matrix Multiplication:\n");
+    displayMatrix(rows1, cols2, result);
+
+    // Add matrices A and B
+    addMatrices(rows1, cols1, A, B, result);
+
+    // Display the result of matrix addition
+    printf("Result of Matrix Addition:\n");
+    displayMatrix(rows1, cols1, result);
+
+    // Check if it's a magic square
+    int n;
+    printf("Enter the size of the square matrix to check for magic square: ");
+    scanf("%d", &n);
+
+    int magicSquare[MAX_SIZE][MAX_SIZE];
+    printf("Enter the elements of the square matrix:\n");
+    readMatrix(n, n, magicSquare);
+
+    if(isMagicSquare(n, magicSquare))
+        printf("It's a magic square!\n");
+    else
+        printf("It's not a magic square.\n");
+
+    return 0;
+}

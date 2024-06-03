@@ -1,0 +1,91 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+// Structure for stack
+typedef struct {
+    char* arr;
+    int top;
+    int capacity;
+} Stack;
+
+// Initialize a stack
+void initialize(Stack* stack, int capacity) {
+    stack->arr = (char*)malloc(sizeof(char) * capacity);
+    stack->top = -1;
+    stack->capacity = capacity;
+}
+
+// Push an element onto the stack
+void push(Stack* stack, char value) {
+    if (stack->top < stack->capacity - 1) {
+        stack->arr[++stack->top] = value;
+    } else {
+        printf("Stack overflow!\n");
+    }
+}
+
+// Pop an element from the stack
+char pop(Stack* stack) {
+    if (stack->top >= 0) {
+        return stack->arr[stack->top--];
+    } else {
+        return '\0'; // Indicates empty stack
+    }
+}
+
+// Check if a character is an opening parenthesis
+int isOpeningParenthesis(char ch) {
+    return (ch == '(' || ch == '{' || ch == '[');
+}
+
+// Check if a character is a closing parenthesis
+int isClosingParenthesis(char ch) {
+    return (ch == ')' || ch == '}' || ch == ']');
+}
+
+// Check if two characters form a matching pair of parentheses
+int areMatching(char opening, char closing) {
+    return (opening == '(' && closing == ')') ||
+           (opening == '{' && closing == '}') ||
+           (opening == '[' && closing == ']');
+}
+
+// Check for matching parentheses in an expression
+int checkMatchingParentheses(char* expression) {
+    Stack stack;
+    initialize(&stack, strlen(expression));
+
+    for (int i = 0; expression[i] != '\0'; i++) {
+        if (isOpeningParenthesis(expression[i])) {
+            push(&stack, expression[i]);
+        } else if (isClosingParenthesis(expression[i])) {
+            char popped = pop(&stack);
+            if (!areMatching(popped, expression[i])) {
+                return 0;
+            }
+        }
+    }
+
+    // Check if there are any remaining opening parentheses
+    if (stack.top != -1) {
+        return 0;
+    }
+
+    return 1;
+}
+
+int main() {
+    char expression[100];
+
+    printf("Enter an expression: ");
+    scanf("%[^\n]", expression);
+
+    if (checkMatchingParentheses(expression)) {
+        printf("Parentheses are balanced.\n");
+    } else {
+        printf("Parentheses are not balanced.\n");
+    }
+
+    return 0;
+}
